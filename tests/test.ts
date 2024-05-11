@@ -3,19 +3,19 @@ import { Keypair, PublicKey, Connection } from "@solana/web3.js";
 import { SimpleUser } from "../src/simpleUser";
 const assert = require("assert");
 
-describe("Solana Tidy User", () => {
+describe("Simple Solana User", () => {
   
   const connection = new Connection("http://127.0.0.1:8899", "confirmed");
   let roleA: SimpleUser = undefined;
 
-  it("a tidyuser is initiated with some faucets", async () => {
+  it("a simpleuser is initiated with some faucets", async () => {
     const keypair = Keypair.generate();
     roleA = await SimpleUser.fromKeypair(connection, keypair);
     const balance = await roleA.sol();
     assert(balance > 0);
   });
 
-  it("mint() should mint tidyuser the token", async () => {
+  it("mint() should mint simpleuser the token", async () => {
     let amount = await roleA.balance("USDC");
     assert.ok(amount == 0);
     
@@ -27,7 +27,7 @@ describe("Solana Tidy User", () => {
     assert.ok(amount > 0);
   });
 
-  it("transfer() should transfer tokens to another tidyuser", async () => {
+  it("transfer() should transfer tokens to another simpleuser", async () => {
     const roleB = await SimpleUser.generate(connection);
     let amount = await roleB.balance("USDC");
     assert.ok(amount == 0);
