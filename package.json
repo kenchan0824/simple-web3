@@ -4,7 +4,8 @@
   "description": "A simple API to interact with the Solana blockchain.",
   "main": "index.js",
   "scripts": {
-    "test": "ts-mocha tests/*.ts"
+    "test": "ts-mocha tests/*.ts",
+    "build": "tsc"
   },
   "repository": {
     "type": "git",
