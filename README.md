@@ -1,7 +1,7 @@
 # Solana Simple Web3
 A simple API to interact with the Solana blockchain.
 
-In regard to testing Solana programs, ones often have to prepare multiple **user roles** and **tokens**, which can be tedious. *Simple-Web3* simplifies your tasks to just a few lines of code.
+In regard to testing Solana programs, ones often have to prepare multiple **user roles** and **tokens**, which can be tedious. *Simple-Web3* simplifies your tasks into just a few lines of code.
 
 ## Setup
 
@@ -12,7 +12,7 @@ npm i @solardev/simple-web3
 
 Import the package in your source codes. 
 ```
-import { SimpleUSer } from "@solardev/simple-web3"
+import { SimpleUser } from "@solardev/simple-web3"
 ```
 
 ## Usage
