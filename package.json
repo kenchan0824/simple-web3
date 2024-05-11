@@ -1,6 +1,6 @@
 {
   "name": "@solardev/simple-web3",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "description": "A simple API to interact with the Solana blockchain.",
   "main": "index.js",
   "scripts": {
@@ -13,7 +13,8 @@
   },
   "keywords": [
     "solana",
-    "web3"
+    "web3",
+    "AwesomeSolana"
   ],
   "author": "Kendrick Chan",
   "license": "MIT",
