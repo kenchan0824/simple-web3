@@ -19,5 +19,9 @@
   "bugs": {
     "url": "https://github.com/kenchan0824/simple-web3/issues"
   },
-  "homepage": "https://github.com/kenchan0824/simple-web3#readme"
+  "homepage": "https://github.com/kenchan0824/simple-web3#readme",
+  "dependencies": {
+    "@solana/spl-token": "^0.4.6",
+    "@solana/web3.js": "^1.91.8"
+  }
 }
