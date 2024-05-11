@@ -32,7 +32,7 @@ const roleB = await SimpleUser.generate(connection)
 ### Check the SOL balance
 A few SOL is airdropped to the `SimpleUser` for paying gas fees when they are created. You can check the SOL balance remained.
 
-> Because faucet is limited, *simple-web3* can break when used outside the **localnet**.
+> Because faucet is limited, *Simple-Web3* may break when used outside **localnet**.
 
 ```
 const balance = await roleA.sol()
@@ -47,7 +47,7 @@ await roleA.mint("USDC").commit()
 ### Transfer tokens
 After minting the SPL token, the minter can transfer arbitrary amount of token to another `SimpleUser`. 
 ```
-await roleA.transfer(roleB, "USDC", 100).commit()
+await roleA.transfer("USDC", 100, roleB).commit()
 ```
 
 ### Check tokens
@@ -67,8 +67,8 @@ You can chain several state-modifying commands together, and make the atomic tra
 
 ```
 await minter.mint("POPCAT)
-    .transfer(roleA, "POPCAT", 100)
-    .transfer(roleA, "POPCAT", 500)
+    .transfer("POPCAT", 100, roleA)
+    .transfer("POPCAT", 500, roleB)
     .commit()
 ```
 

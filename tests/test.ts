@@ -32,7 +32,7 @@ describe("Simple Solana User", () => {
     let amount = await roleB.balance("USDC");
     assert.ok(amount == 0);
 
-    await roleA.transfer(roleB, "USDC", 500).commit();
+    await roleA.transfer("USDC", 500, roleB).commit();
     assert.ok(roleB.tokens["USDC"].toBase58() == roleA.tokens["USDC"].toBase58());
     assert.ok(roleB.tokenAccounts["USDC"] instanceof PublicKey);
     
@@ -44,8 +44,8 @@ describe("Simple Solana User", () => {
     const roleC = await SimpleUser.generate(connection);
     const minter = await SimpleUser.generate(connection);
     await minter.mint("POPCAT")
-      .transfer(roleA, "POPCAT", 500)
-      .transfer(roleC, "POPCAT", 1000)
+      .transfer("POPCAT", 500, roleA)
+      .transfer("POPCAT", 1000, roleC)
       .commit();
 
     let amount = await roleA.balance("POPCAT");

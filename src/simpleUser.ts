@@ -121,7 +121,7 @@ export class SimpleUser extends Keypair {
     return +value.amount / Math.pow(10, value.decimals);
   }
 
-  public transfer(another: SimpleUser, symbol: string, amount: number) {
+  public transfer(symbol: string, amount: number, another: SimpleUser) {
     let destination = another.tokenAccounts[symbol];
     if (!destination) {
       const mint = this.tokens[symbol]
