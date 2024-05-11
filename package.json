@@ -1,0 +1,23 @@
+{
+  "name": "@solardev/simple-web3",
+  "version": "0.1.0",
+  "description": "A simple API to interact with the Solana blockchain.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kenchan0824/simple-web3.git"
+  },
+  "keywords": [
+    "solana",
+    "web3"
+  ],
+  "author": "Kendrick Chan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/kenchan0824/simple-web3/issues"
+  },
+  "homepage": "https://github.com/kenchan0824/simple-web3#readme"
+}
