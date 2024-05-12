@@ -1,11 +1,11 @@
 # Solana Simple Web3
 A simple API to interact with the Solana blockchain.
 
-In regard to testing Solana programs, ones often have to prepare multiple **user roles** and **tokens**, which can be tedious. *Simple-Web3* simplifies your tasks into just a few lines of code.
+In regard to unit test of Solana programs, ones often have to prepare multiple **user roles** and **tokens** beforehand, which can be tedious. *Simple-Web3* simplifies your tasks into just a few lines of codes.
 
 ## Setup
 
-Install the package with NPM under your project folder. 
+Install with NPM under your project folder. 
 ```
 npm i @solardev/simple-web3
 ```
@@ -20,7 +20,7 @@ import { SimpleUser } from "@solardev/simple-web3"
 
 ### Create users
 
-Every *simple-web3* command starts with the `SimpleUser` instance. You can generate a random one, or create one with a `web3.Keypair`. Pass in the `web3.connection` either from the Anchor provider or the Solana web3 API.
+Every *simple-web3* command starts with a `SimpleUser` instance. You can generate a new one with a random private key, or import from an existing `web3.Keypair`. Pass in a `web3.connection` either from the Anchor provider or Solana web3 API.
 ```
 const roleA = await SimpleUser.fromKeypair(connection, keypair)
 ```
@@ -28,30 +28,29 @@ const roleA = await SimpleUser.fromKeypair(connection, keypair)
 const roleB = await SimpleUser.generate(connection)
 ```
 
-
 ### Check the SOL balance
-A few SOL is airdropped to the `SimpleUser` for paying gas fees when they are created. You can check the SOL balance remained.
+Some SOL is airdropped to newly created `SimpleUser` for paying gas fees. You can check their SOL balance remained.
 
-> Because faucet is limited, *Simple-Web3* may break when used outside **localnet**.
+> Because faucet is limited, *Simple-Web3* may not work outside **localnet**.
 
 ```
 const balance = await roleA.sol()
 ```
 
 ### Mint tokens
-The `SimpleUser` can mint a SPL token with an alias. The minted token has 9 digits decimal, with initial supply big enough for testing purposes and all owned by the minter.
+`SimpleUser` can mint SPL tokens with the alias. The minted tokens are default to 9 digits decimal and have an initial supply big enough for testing. All initial tokens are owned by the minter.
 ```
 await roleA.mint("USDC").commit()
 ```
 
 ### Transfer tokens
-After minting the SPL token, the minter can transfer arbitrary amount of token to another `SimpleUser`. 
+After minting the SPL tokens, minters can transfer any amounts to another `SimpleUser`. 
 ```
 await roleA.transfer("USDC", 100, roleB).commit()
 ```
 
 ### Check tokens
-Every `SimpleUser` can own multiple tokens, the mint address, associated token account, and balance can be checked by referencing the alias.
+A `SimpleUser` can own several tokens. Their mint address, associated token account and balance can be checked by referencing the associated alias.
 ```
 const mintAddress = roleB.tokens["USDC"]
 ```
@@ -62,8 +61,8 @@ const ataAddress = roleB.tokenAccounts["USDC"]
 const balance = await roleB.balance("USDC")
 ```
 
-### Chain commands
-You can chain several state-modifying commands together, and make the atomic transaction.
+### Commands pipeline 
+You can chain multiple state-modifying commands together, and submit an atomic transaction.
 
 ```
 await minter.mint("POPCAT)
@@ -72,8 +71,8 @@ await minter.mint("POPCAT)
     .commit()
 ```
 
-### Sign Anchor transactions
-*Simple-Web3* is the best companion with *Anchor* to produce easy-reading Solana codes.
+### Sign  Anchor transactions
+*Simple-Web3* is the best companion with *Anchor* to produce tidy Solana client codes. You may just treat `SimpleUser` as the `web3.Keypair` and use anywhere.
 ```
 await program.methods.initCounter()
     .accounts({

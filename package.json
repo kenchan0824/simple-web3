@@ -1,6 +1,6 @@
 {
   "name": "@solardev/simple-web3",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "A simple API to interact with the Solana blockchain.",
   "main": "index.js",
   "scripts": {
