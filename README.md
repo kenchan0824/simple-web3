@@ -52,13 +52,13 @@ await roleA.transfer("USDC", 100, roleB).commit()
 ### Check tokens
 A `SimpleUser` can own several tokens. Their mint address, associated token account and balance can be checked by referencing the associated alias.
 ```
-const mintAddress = roleB.tokens["USDC"]
+const { mint, decimals } = roleB.tokens["USDC"]
 ```
 ```
-const ataAddress = roleB.tokenAccounts["USDC"]
+const ata = roleB.tokenAccounts["USDC"]
 ```
 ```
-const balance = await roleB.balance("USDC")
+const { rawAmount, decimals, amount } = await roleB.balance("USDC")
 ```
 
 ### Commands pipeline 

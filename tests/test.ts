@@ -16,28 +16,29 @@ describe("Simple Solana User", () => {
   });
 
   it("mint() should mint simpleuser the token", async () => {
-    let amount = await roleA.balance("USDC");
-    assert.ok(amount == 0);
-    
     await roleA.mint("USDC").commit();
-    assert.ok(roleA.tokens["USDC"] instanceof PublicKey);
+    assert.ok(roleA.tokens["USDC"].mint instanceof PublicKey);
+    assert.ok(roleA.tokens["USDC"].decimals == 9);
     assert.ok(roleA.tokenAccounts["USDC"] instanceof PublicKey);
     
-    amount = await roleA.balance("USDC");
-    assert.ok(amount > 0);
+    const balance = await roleA.balance("USDC");
+    assert.ok(balance.amount > 0);
+    assert.ok(balance.rawAmount > 0);
+    assert.ok(balance.decimals == 9);
   });
 
   it("transfer() should transfer tokens to another simpleuser", async () => {
     const roleB = await SimpleUser.generate(connection);
-    let amount = await roleB.balance("USDC");
-    assert.ok(amount == 0);
+    let balance = await roleB.balance("USDC");
+    assert.ok(balance.amount == 0);
 
     await roleA.transfer("USDC", 500, roleB).commit();
-    assert.ok(roleB.tokens["USDC"].toBase58() == roleA.tokens["USDC"].toBase58());
+    assert.ok(roleB.tokens["USDC"].mint.toBase58() == roleA.tokens["USDC"].mint.toBase58());
+    assert.ok(roleB.tokens["USDC"].decimals == roleA.tokens["USDC"].decimals);
     assert.ok(roleB.tokenAccounts["USDC"] instanceof PublicKey);
     
-    amount = await roleB.balance("USDC");
-    assert.ok(amount > 0);
+    balance = await roleB.balance("USDC");
+    assert.ok(balance.amount == 500);
   });
 
   it("tidy actions can be chained together", async () => {
@@ -48,11 +49,11 @@ describe("Simple Solana User", () => {
       .transfer("POPCAT", 1000, roleC)
       .commit();
 
-    let amount = await roleA.balance("POPCAT");
-    assert.ok(amount == 500);
+    let balance = await roleA.balance("POPCAT");
+    assert.ok(balance.amount == 500);
     
-    amount = await roleC.balance("POPCAT");
-    assert.ok(amount == 1000);    
+    balance = await roleC.balance("POPCAT");
+    assert.ok(balance.amount == 1000);    
   });
 
 });

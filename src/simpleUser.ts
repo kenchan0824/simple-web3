@@ -8,14 +8,27 @@ import {
   createMintToInstruction, createTransferInstruction,
   MINT_SIZE, TOKEN_PROGRAM_ID, ASSOCIATED_TOKEN_PROGRAM_ID,
 } from "@solana/spl-token";
-  
+
+
+export type TokenInfo = {
+  mint: PublicKey;
+  decimals: number;
+}
+
+export type BalanceInfo = {
+  amount: number;
+  rawAmount: number;
+  decimals: number;
+}
+
+
 export class SimpleUser extends Keypair {
 
   conn: Connection;
   rent: number;
   txn: Transaction;
   signers: Signer[];
-  tokens: { [index: string]: PublicKey };
+  tokens: { [index: string]: TokenInfo };
   tokenAccounts: { [index: string]: PublicKey };
 
   private constructor(conn: Connection, keypair: Keypair, rent: number) {
@@ -28,19 +41,19 @@ export class SimpleUser extends Keypair {
     this.tokenAccounts = {}
   }
 
-  static async fromKeypair(conn: Connection, keypair: Keypair) {
+  static async fromKeypair(conn: Connection, keypair: Keypair): Promise<SimpleUser> {
     const rent = await getMinimumBalanceForRentExemptMint(conn);
     const user = new SimpleUser(conn, keypair, rent);
     await user.faucet();
     return user;
   }
 
-  static async generate(conn: Connection) {
+  static async generate(conn: Connection): Promise<SimpleUser> {
     const keypair = Keypair.generate();
     return await SimpleUser.fromKeypair(conn, keypair);
   }
 
-  public async sol() {
+  public async sol(): Promise<number> {
     const lamports = await this.conn.getBalance(this.publicKey);
     return lamports / LAMPORTS_PER_SOL;
   }
@@ -50,9 +63,9 @@ export class SimpleUser extends Keypair {
     await this.conn.confirmTransaction(tx);
   }
 
-  public mint(symbol: string) {
+  public mint(symbol: string, decimals: number = 9): SimpleUser {
     const mint = Keypair.generate();
-    this.tokens[symbol] = mint.publicKey;
+    this.tokens[symbol] = { mint: mint.publicKey, decimals }
 
     const tokenAccount = getAssociatedTokenAddressSync(
     mint.publicKey,
@@ -75,7 +88,7 @@ export class SimpleUser extends Keypair {
       // init mint
       createInitializeMintInstruction(
         mint.publicKey, // mint pubkey
-        9, // decimals
+        decimals, 
         this.publicKey, // mint authority
         null // freeze authority
       ),
@@ -113,19 +126,28 @@ export class SimpleUser extends Keypair {
     this.signers = [];
   }
 
-  public async balance(symbol: string) {
+  public async balance(symbol: string): Promise<BalanceInfo> {
     const tokenAccount = this.tokenAccounts[symbol]
-    if (!tokenAccount) return 0;
+    if (!tokenAccount) return {
+      rawAmount: 0,
+      decimals: this.tokens[symbol]?.decimals,
+      amount: 0
+    };
 
     const { value } = await this.conn.getTokenAccountBalance(tokenAccount);
-    return +value.amount / Math.pow(10, value.decimals);
+    return {
+      rawAmount: +value.amount,
+      decimals: value.decimals,
+      amount: +value.amount / Math.pow(10, value.decimals)
+    };
   }
 
-  public transfer(symbol: string, amount: number, another: SimpleUser) {
+  public transfer(symbol: string, amount: number, another: SimpleUser): SimpleUser {
     let destination = another.tokenAccounts[symbol];
+    const { mint, decimals } = this.tokens[symbol]
+
     if (!destination) {
-      const mint = this.tokens[symbol]
-      another.tokens[symbol] = mint;
+      another.tokens[symbol] = { mint, decimals };
 
       const tokenAccount = getAssociatedTokenAddressSync(
         mint,
@@ -156,7 +178,7 @@ export class SimpleUser extends Keypair {
           this.tokenAccounts[symbol], 
           destination, 
           this.publicKey, 
-          amount * Math.pow(10, 9), 
+          amount * Math.pow(10, decimals), 
           [], // multiSigners 
           TOKEN_PROGRAM_ID
       )
