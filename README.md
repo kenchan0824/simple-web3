@@ -13,7 +13,7 @@ npm i @solardev/simple-web3
 Import the package in your source codes. 
 ```
 import { 
-    SimpleUser, u8, u16, u32, u64, findPorgramAddress 
+    SimpleUser, u8, u16, u32, u64, findProgramAddress 
 } from "@solardev/simple-web3"
 ```
 
