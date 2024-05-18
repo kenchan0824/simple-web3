@@ -1,6 +1,6 @@
 {
   "name": "@solardev/simple-web3",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "A simple API to interact with the Solana blockchain.",
   "main": "index.js",
   "scripts": {
@@ -24,7 +24,8 @@
   "homepage": "https://github.com/kenchan0824/simple-web3#readme",
   "dependencies": {
     "@solana/spl-token": "^0.4.6",
-    "@solana/web3.js": "^1.91.8"
+    "@solana/web3.js": "^1.91.8",
+    "bn.js": "^5.2.1"
   },
   "devDependencies": {
     "ts-mocha": "^10.0.0",

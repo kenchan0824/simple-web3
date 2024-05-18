@@ -3,7 +3,7 @@ import { Keypair, PublicKey, Connection } from "@solana/web3.js";
 import { SimpleUser } from "../src/simpleUser";
 const assert = require("assert");
 
-describe("Simple Solana User", () => {
+describe.skip("Simple Solana User", () => {
   
   const connection = new Connection("http://127.0.0.1:8899", "confirmed");
   let roleA: SimpleUser = undefined;

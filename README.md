@@ -12,10 +12,29 @@ npm i @solardev/simple-web3
 
 Import the package in your source codes. 
 ```
-import { SimpleUser } from "@solardev/simple-web3"
+import { 
+    SimpleUser, u8, u16, u32, u64, findPorgramAddress 
+} from "@solardev/simple-web3"
 ```
 
-## Usage
+## PDA Utility
+
+### Program Derived Address
+We provide a handy version for **findProgramAddressSync**, users can just pass the `string`, `publicKey` or `number` as seed.
+```
+const [pda, bump] = findProgramAddress(
+    programId,
+    ["seed", user.publicKey, u16(1234)]
+)
+```
+```
+const pda = createProgramAddress(
+    programId,
+    ["seed", user.publicKey, u16(1234), u8(bump)]
+)
+```
+
+## Simple Solana User
 
 
 ### Create users
@@ -83,4 +102,4 @@ await program.methods.initCounter()
     .rpc()
 ```
 ---
-#AwesomeSolana #Solana #web3
+#AwesomeSolana #Solana #web3 #PDA
