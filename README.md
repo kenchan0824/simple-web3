@@ -17,25 +17,24 @@ import {
 } from "@solardev/simple-web3"
 ```
 
-## PDA Utility
+## Simple PDA Utility
 
 ### Program Derived Address
-We provide a handy version for **findProgramAddressSync**, users can just pass the `string`, `publicKey` or `number` as seed.
+We provide a handy version of **findProgramAddressSync**, users can just pass the `string`, `publicKey` or `number` as seed.
 ```
 const [pda, bump] = findProgramAddress(
     programId,
-    ["seed", user.publicKey, u16(1234)]
+    ["seed", roleA.publicKey, u16(1234)]
 )
 ```
 ```
 const pda = createProgramAddress(
     programId,
-    ["seed", user.publicKey, u16(1234), u8(bump)]
+    ["seed", roleA.publicKey, u16(1234), u8(bump)]
 )
 ```
 
 ## Simple Solana User
-
 
 ### Create users
 
@@ -84,7 +83,7 @@ const { rawAmount, decimals, amount } = await roleB.balance("USDC")
 You can chain multiple state-modifying commands together, and submit an atomic transaction.
 
 ```
-await minter.mint("POPCAT)
+await minter.mint("POPCAT")
     .transfer("POPCAT", 100, roleA)
     .transfer("POPCAT", 500, roleB)
     .commit()
@@ -96,7 +95,7 @@ await minter.mint("POPCAT)
 await program.methods.initCounter()
     .accounts({
         owner: roleA.publicKey,
-        counter: counterAddress
+        counter: counterPDA
     })
     .signers([roleA])
     .rpc()
