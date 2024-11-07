@@ -46,10 +46,19 @@ const roleA = await SimpleUser.fromKeypair(connection, keypair)
 const roleB = await SimpleUser.generate(connection)
 ```
 
+### Get SOL faucets
+
+Get the basic SOL from testnet for activities gas fees.
+
+> Because faucet is limited, this function may fail outside **localnet**.
+
+```
+await roleA.faucet(5)
+```
+
 ### Check the SOL balance
 Some SOL is airdropped to newly created `SimpleUser` for paying gas fees. You can check their SOL balance remained.
 
-> Because faucet is limited, *Simple-Web3* may not work outside **localnet**.
 
 ```
 const balance = await roleA.sol()

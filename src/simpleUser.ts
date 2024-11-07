@@ -44,7 +44,6 @@ export class SimpleUser extends Keypair {
   static async fromKeypair(conn: Connection, keypair: Keypair): Promise<SimpleUser> {
     const rent = await getMinimumBalanceForRentExemptMint(conn);
     const user = new SimpleUser(conn, keypair, rent);
-    await user.faucet();
     return user;
   }
 

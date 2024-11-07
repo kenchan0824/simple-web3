@@ -3,7 +3,7 @@ import { Keypair, PublicKey, Connection } from "@solana/web3.js";
 import { SimpleUser } from "../src/simpleUser";
 const assert = require("assert");
 
-describe.skip("Simple Solana User", () => {
+describe("Simple Solana User", () => {
   
   const connection = new Connection("http://127.0.0.1:8899", "confirmed");
   let roleA: SimpleUser = undefined;
@@ -11,6 +11,8 @@ describe.skip("Simple Solana User", () => {
   it("a simpleuser is initiated with some faucets", async () => {
     const keypair = Keypair.generate();
     roleA = await SimpleUser.fromKeypair(connection, keypair);
+    await roleA.faucet();
+    
     const balance = await roleA.sol();
     assert(balance > 0);
   });
@@ -43,7 +45,10 @@ describe.skip("Simple Solana User", () => {
 
   it("tidy actions can be chained together", async () => {
     const roleC = await SimpleUser.generate(connection);
-    const minter = await SimpleUser.generate(connection);
+    await roleC.faucet();
+    const minter = await SimpleUser.generate(connection)
+    await minter.faucet();
+    
     await minter.mint("POPCAT")
       .transfer("POPCAT", 500, roleA)
       .transfer("POPCAT", 1000, roleC)
