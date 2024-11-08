@@ -40,10 +40,10 @@ const pda = createProgramAddress(
 
 Every *simple-web3* command starts with a `SimpleUser` instance. You can generate a new one with a random private key, or import from an existing `web3.Keypair`. Pass in a `web3.connection` either from the Anchor provider or Solana web3 API.
 ```
-const roleA = await SimpleUser.fromKeypair(connection, keypair)
+const roleA = SimpleUser.fromKeypair(connection, keypair)
 ```
 ```
-const roleB = await SimpleUser.generate(connection)
+const roleB = SimpleUser.generate(connection)
 ```
 
 ### Get SOL faucets

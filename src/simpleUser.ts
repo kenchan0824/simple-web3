@@ -41,15 +41,15 @@ export class SimpleUser extends Keypair {
     this.tokenAccounts = {}
   }
 
-  static async fromKeypair(conn: Connection, keypair: Keypair): Promise<SimpleUser> {
-    const rent = await getMinimumBalanceForRentExemptMint(conn);
+  static fromKeypair(conn: Connection, keypair: Keypair): SimpleUser {
+    const rent = 1461600;
     const user = new SimpleUser(conn, keypair, rent);
     return user;
   }
 
-  static async generate(conn: Connection): Promise<SimpleUser> {
+  static generate(conn: Connection): SimpleUser {
     const keypair = Keypair.generate();
-    return await SimpleUser.fromKeypair(conn, keypair);
+    return SimpleUser.fromKeypair(conn, keypair);
   }
 
   public async sol(): Promise<number> {
@@ -58,6 +58,9 @@ export class SimpleUser extends Keypair {
   }
 
   public async faucet(sol: number = 5) {
+    // const rent = await getMinimumBalanceForRentExemptMint(this.conn)
+    // this.rent = rent;
+    // console.log("rent", rent);
     const tx = await this.conn.requestAirdrop(this.publicKey, sol * LAMPORTS_PER_SOL);
     await this.conn.confirmTransaction(tx);
   }

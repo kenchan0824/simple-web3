@@ -6,13 +6,13 @@ const assert = require("assert");
 describe("Simple Solana User", () => {
   
   const connection = new Connection("http://127.0.0.1:8899", "confirmed");
-  let roleA: SimpleUser = undefined;
+  const keypair = Keypair.generate();
+  const roleA = SimpleUser.fromKeypair(connection, keypair);;
+  const roleB = SimpleUser.generate(connection);
+  const roleC = SimpleUser.generate(connection);
 
   it("a simpleuser is initiated with some faucets", async () => {
-    const keypair = Keypair.generate();
-    roleA = await SimpleUser.fromKeypair(connection, keypair);
-    await roleA.faucet();
-    
+    await roleA.faucet();    
     const balance = await roleA.sol();
     assert(balance > 0);
   });
@@ -30,7 +30,7 @@ describe("Simple Solana User", () => {
   });
 
   it("transfer() should transfer tokens to another simpleuser", async () => {
-    const roleB = await SimpleUser.generate(connection);
+    await roleB.faucet;
     let balance = await roleB.balance("USDC");
     assert.ok(balance.amount == 0);
 
@@ -44,7 +44,6 @@ describe("Simple Solana User", () => {
   });
 
   it("tidy actions can be chained together", async () => {
-    const roleC = await SimpleUser.generate(connection);
     await roleC.faucet();
     const minter = await SimpleUser.generate(connection)
     await minter.faucet();
