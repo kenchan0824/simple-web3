@@ -21,7 +21,7 @@ describe("Simple Solana User", () => {
     await roleA.mint("USDC").commit();
     assert.ok(roleA.tokens["USDC"].mint instanceof PublicKey);
     assert.ok(roleA.tokens["USDC"].decimals == 9);
-    assert.ok(roleA.tokenAccounts["USDC"] instanceof PublicKey);
+    assert.ok(roleA.tokens["USDC"].tokenAccount instanceof PublicKey);
     
     const balance = await roleA.balance("USDC");
     assert.ok(balance.amount > 0);
@@ -37,7 +37,7 @@ describe("Simple Solana User", () => {
     await roleA.transfer("USDC", 500, roleB).commit();
     assert.ok(roleB.tokens["USDC"].mint.toBase58() == roleA.tokens["USDC"].mint.toBase58());
     assert.ok(roleB.tokens["USDC"].decimals == roleA.tokens["USDC"].decimals);
-    assert.ok(roleB.tokenAccounts["USDC"] instanceof PublicKey);
+    assert.ok(roleB.tokens["USDC"].tokenAccount instanceof PublicKey);
     
     balance = await roleB.balance("USDC");
     assert.ok(balance.amount == 500);

@@ -13,6 +13,7 @@ import {
 export type TokenInfo = {
   mint: PublicKey;
   decimals: number;
+  tokenAccount: PublicKey;
 }
 
 export type BalanceInfo = {
@@ -38,7 +39,6 @@ export class SimpleUser extends Keypair {
     this.txn = new Transaction();
     this.signers = [];
     this.tokens = {};
-    this.tokenAccounts = {}
   }
 
   static fromKeypair(conn: Connection, keypair: Keypair): SimpleUser {
@@ -67,7 +67,7 @@ export class SimpleUser extends Keypair {
 
   public mint(symbol: string, decimals: number = 9): SimpleUser {
     const mint = Keypair.generate();
-    this.tokens[symbol] = { mint: mint.publicKey, decimals }
+    this.tokens[symbol] = { mint: mint.publicKey, decimals, tokenAccount: undefined }
 
     const tokenAccount = getAssociatedTokenAddressSync(
     mint.publicKey,
@@ -76,7 +76,7 @@ export class SimpleUser extends Keypair {
     TOKEN_PROGRAM_ID,
     ASSOCIATED_TOKEN_PROGRAM_ID
     );   
-    this.tokenAccounts[symbol] = tokenAccount;
+    this.tokens[symbol].tokenAccount = tokenAccount;
 
     this.txn.add(
       // create mint account
@@ -129,7 +129,7 @@ export class SimpleUser extends Keypair {
   }
 
   public async balance(symbol: string): Promise<BalanceInfo> {
-    const tokenAccount = this.tokenAccounts[symbol]
+    const tokenAccount = this.tokens[symbol]?.tokenAccount;
     if (!tokenAccount) return {
       rawAmount: 0,
       decimals: this.tokens[symbol]?.decimals,
@@ -145,11 +145,11 @@ export class SimpleUser extends Keypair {
   }
 
   public transfer(symbol: string, amount: number, another: SimpleUser): SimpleUser {
-    let destination = another.tokenAccounts[symbol];
+    let destination = another.tokens[symbol]?.tokenAccount;
     const { mint, decimals } = this.tokens[symbol]
 
     if (!destination) {
-      another.tokens[symbol] = { mint, decimals };
+      another.tokens[symbol] = { mint, decimals, tokenAccount: undefined };
 
       const tokenAccount = getAssociatedTokenAddressSync(
         mint,
@@ -158,7 +158,7 @@ export class SimpleUser extends Keypair {
         TOKEN_PROGRAM_ID,
         ASSOCIATED_TOKEN_PROGRAM_ID
       );   
-      another.tokenAccounts[symbol] = tokenAccount;
+      another.tokens[symbol].tokenAccount = tokenAccount;
       destination = tokenAccount;
 
       this.txn.add(
@@ -177,7 +177,7 @@ export class SimpleUser extends Keypair {
 
     this.txn.add(
       createTransferInstruction(
-          this.tokenAccounts[symbol], 
+          this.tokens[symbol].tokenAccount, 
           destination, 
           this.publicKey, 
           amount * Math.pow(10, decimals), 
